@@ -1,6 +1,8 @@
 class Gameboard {
     constructor() {
         this.ships = [];
+        this.missedAttacks = [];
+        this.attackedCoordinates = [];
     }
 
     placeShip(ship, start, orientation) {
@@ -47,6 +49,39 @@ class Gameboard {
             ship,
             coordinates
         });
+    }
+
+    receiveAttack(coordinates) {
+        const [x, y] = coordinates;
+
+        if (x < 0 || x >= 10 || y < 0 || y >= 10) {
+            throw new Error("Invalid coordinates");
+        }
+
+        const wasAlreadyAttacked = this.attackedCoordinates.some(
+            ([attackedX, attackedY]) => {
+                return attackedX === x && attackedY === y;
+            }
+        );
+
+        if (wasAlreadyAttacked) {
+            throw new Error("Coordinate already attacked");
+        }
+
+        this.attackedCoordinates.push(coordinates);
+
+        const shipHit = this.ships.find((placedShip) => {
+            return placedShip.coordinates.some((coordinate) => {
+                return coordinate[0] === x && coordinate[1] === y;
+            });
+        });
+
+        if (shipHit) {
+            shipHit.ship.hit();
+        }
+        else {
+            this.missedAttacks.push(coordinates);
+        }
     }
 }
 

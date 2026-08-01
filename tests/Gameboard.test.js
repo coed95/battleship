@@ -77,4 +77,48 @@ describe("Gameboard", () => {
 
         expect(gameboard.ships).toHaveLength(0);
     });
+
+    test("receiveAttack() hits a ship at the given coordinate", () => {
+        const ship = new Ship(3);
+        const gameboard = new Gameboard();
+
+        gameboard.placeShip(ship, [1, 2], "horizontal");
+        gameboard.receiveAttack([2, 2]);
+
+        expect(ship.hits).toBe(1);
+    });
+
+    test("receiveAttack() records a missed attack", () => {
+        const gameboard = new Gameboard();
+
+        gameboard.receiveAttack([4, 5]);
+
+        expect(gameboard.missedAttacks).toEqual([[4, 5]]);
+    });
+
+    test("receiveAttack() should not hit the same ship coordinate twice", () => {
+        const ship = new Ship(3);
+        const gameboard = new Gameboard();
+
+        gameboard.placeShip(ship, [1, 2], "horizontal");
+        gameboard.receiveAttack([2, 2]);
+
+        expect(() => {
+            gameboard.receiveAttack([2, 2]);
+        }).toThrow("Coordinate already attacked");
+
+        expect(ship.hits).toBe(1);
+    });
+
+    test("receiveAttack() should not record the same missed attack twice", () => {
+        const gameboard = new Gameboard();
+
+        gameboard.receiveAttack([4, 5]);
+
+        expect(() => {
+            gameboard.receiveAttack([4, 5]);
+        }).toThrow("Coordinate already attacked");
+
+        expect(gameboard.missedAttacks).toEqual([[4, 5]]);
+    });
 });
