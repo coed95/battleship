@@ -121,4 +121,31 @@ describe("Gameboard", () => {
 
         expect(gameboard.missedAttacks).toEqual([[4, 5]]);
     });
+
+    test("allShipsSunk() returns false when the board has no ships", () => {
+        const gameboard = new Gameboard();
+
+        expect(gameboard.allShipsSunk()).toBe(false);
+    });
+
+    test("allShipsSunk() returns false when at least one ship is not sunk", () => {
+        const gameboard = new Gameboard();
+        const ship = new Ship(2);
+
+        gameboard.placeShip(ship, [1, 1], "horizontal");
+        gameboard.receiveAttack([1, 1]);
+
+        expect(gameboard.allShipsSunk()).toBe(false);
+    });
+
+    test("allShipsSunk() returns true when every ship is sunk", () => {
+        const gameboard = new Gameboard();
+        const ship = new Ship(2);
+
+        gameboard.placeShip(ship, [1, 1], "horizontal");
+        gameboard.receiveAttack([1, 1]);
+        gameboard.receiveAttack([2, 1]);
+
+        expect(gameboard.allShipsSunk()).toBe(true);
+    });
 });

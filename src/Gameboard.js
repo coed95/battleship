@@ -83,6 +83,11 @@ class Gameboard {
             this.missedAttacks.push(coordinates);
         }
     }
+
+    allShipsSunk() {
+        return this.ships.length > 0 &&
+            this.ships.every((placedShip) => placedShip.ship.isSunk());
+    }
 }
 
 export default Gameboard;
