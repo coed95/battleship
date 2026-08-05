@@ -1,4 +1,4 @@
-function renderBoard(gameboard, element, hideShips = false) {
+function renderBoard(gameboard, element, hideShips = false, onClick = null) {
     element.innerHTML = "";
 
     for (let y = 9; y >= 0; y--) {
@@ -15,8 +15,26 @@ function renderBoard(gameboard, element, hideShips = false) {
                 });
             });
 
+            const wasAttacked = gameboard.attackedCoordinates.some(
+                ([attackedX, attackedY]) => {
+                    return attackedX === x && attackedY === y;
+            });
+
             if (hasShip && !hideShips) {
                 square.classList.add("ship");
+            }
+
+            if (wasAttacked && hasShip) {
+                square.classList.add("hit");
+            }
+            else if (wasAttacked) {
+                square.classList.add("miss");
+            }
+
+            if (onClick) {
+                square.addEventListener("click", () => {
+                    onClick(x, y);
+                });
             }
 
             element.appendChild(square);
@@ -24,4 +42,4 @@ function renderBoard(gameboard, element, hideShips = false) {
     }
 }
 
-export default renderBoard;
+export { renderBoard };

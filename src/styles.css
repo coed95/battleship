@@ -7,18 +7,26 @@
 #player-board,
 #computer-board {
     display: grid;
-    grid-template-columns: repeat(10, 35px);
-    grid-template-rows: repeat(10, 35px);
+    grid-template-columns: repeat(10, 32px);
+    grid-template-rows: repeat(10, 32px);
     margin: 20px;
 }
 
 .square {
-    width: 35px;
-    height: 35px;
+    width: 32px;
+    height: 32px;
     border: 1px solid black;
     box-sizing: border-box;
 }
 
 .ship {
     background-color: gray;
+}
+
+.hit {
+    background-color: red;
+}
+
+.miss {
+    background-color: lightblue;
 }
