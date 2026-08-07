@@ -33,6 +33,11 @@ function render() {
             
             game.attack([x, y]);
             render();
+
+            if (!game.gameOver && game.currentTurn === "computer") {
+                game.computerTurn();
+                render();
+            }
         }
     );
 }
