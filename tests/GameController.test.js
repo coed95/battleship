@@ -167,4 +167,26 @@ describe("GameController", () => {
 
         expect(gameboard.allShipsSunk()).toBe(true);
     });
+
+    test("placeFleet() places all 5 ships", () => {
+        const game = new GameController();
+        const gameboard = game.computerPlayer.gameboard;
+
+        game.placeFleet(gameboard);
+
+        expect(gameboard.ships).toHaveLength(5);
+    });
+
+    test("placeFleet() places the correct ship lengths", () => {
+        const game = new GameController();
+        const gameboard = game.humanPlayer.gameboard;
+
+        game.placeFleet(gameboard);
+
+        const lengths = gameboard.ships.map(
+            (placedShip) => placedShip.ship.length
+        );
+
+        expect(lengths).toEqual([5, 4, 3, 3, 2]);
+    });
 });
