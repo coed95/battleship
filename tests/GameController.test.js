@@ -170,7 +170,7 @@ describe("GameController", () => {
 
     test("placeFleet() places all 5 ships", () => {
         const game = new GameController();
-        const gameboard = game.computerPlayer.gameboard;
+        const gameboard = game.humanPlayer.gameboard;
 
         game.placeFleet(gameboard);
 
@@ -179,7 +179,7 @@ describe("GameController", () => {
 
     test("placeFleet() places the correct ship lengths", () => {
         const game = new GameController();
-        const gameboard = game.humanPlayer.gameboard;
+        const gameboard = game.computerPlayer.gameboard;
 
         game.placeFleet(gameboard);
 

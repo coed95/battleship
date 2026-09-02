@@ -1,21 +1,33 @@
 import GameController from "./GameController.js";
-import Ship from "./Ship.js";
 import { renderBoard } from "./domController.js";
 
 const game = new GameController();
 
+game.placeFleet(game.humanPlayer.gameboard);
+game.placeFleet(game.computerPlayer.gameboard);
+
 const playerBoardElement = document.querySelector("#player-board");
 const computerBoardElement = document.querySelector("#computer-board");
-
-const playerShip = new Ship(3);
-
-game.humanPlayer.gameboard.placeShip(
-    playerShip,
-    [1, 2],
-    "horizontal"
-);
+const statusElement = document.querySelector("#status");
 
 function render() {
+    if (game.gameOver) {
+        if (game.winner === "human") {
+            statusElement.textContent = "You won!";
+        }
+        else {
+            statusElement.textContent = "Computer won!";
+        }
+    }
+    else {
+        if (game.currentTurn === "human") {
+            statusElement.textContent = "Your turn";
+        }
+        else {
+            statusElement.textContent = "Computer's turn";
+        }
+    }
+
     renderBoard(
         game.humanPlayer.gameboard,
         playerBoardElement,
@@ -35,8 +47,10 @@ function render() {
             render();
 
             if (!game.gameOver && game.currentTurn === "computer") {
-                game.computerTurn();
-                render();
+                setTimeout(() => {
+                    game.computerTurn();
+                    render();
+                }, 500);
             }
         }
     );
