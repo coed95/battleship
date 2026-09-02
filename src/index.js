@@ -3,9 +3,6 @@ import { renderBoard } from "./domController.js";
 
 const game = new GameController();
 
-game.placeFleet(game.humanPlayer.gameboard);
-game.placeFleet(game.computerPlayer.gameboard);
-
 const playerBoardElement = document.querySelector("#player-board");
 const computerBoardElement = document.querySelector("#computer-board");
 const statusElement = document.querySelector("#status");

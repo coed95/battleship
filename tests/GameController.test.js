@@ -189,4 +189,28 @@ describe("GameController", () => {
 
         expect(lengths).toEqual([5, 4, 3, 3, 2]);
     });
+
+    test("a new game starts in placement phase", () => {
+        const game = new GameController();
+
+        expect(game.phase).toBe("placement");
+    });
+
+    test("startGame() throws if the human fleet is incomplete", () => {
+        const game = new GameController();
+
+        expect(() => {
+            game.startGame();
+        }).toThrow("Human fleet is incomplete");
+    });
+
+    test("startGame() changes phase to playing when the human fleet is complete", () => {
+        const game = new GameController();
+
+        game.placeFleet(game.humanPlayer.gameboard);
+
+        game.startGame();
+
+        expect(game.phase).toBe("playing");
+    });
 });

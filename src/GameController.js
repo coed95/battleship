@@ -8,6 +8,7 @@ class GameController {
         this.currentTurn = "human";
         this.gameOver = false;
         this.winner = null;
+        this.phase = "placement";
     }
 
     switchTurn() {
@@ -99,6 +100,15 @@ class GameController {
                 }
             } while (!placed);
         }
+    }
+
+    startGame() {
+        if (this.humanPlayer.gameboard.ships.length !== 5) {
+            throw new Error("Human fleet is incomplete");
+        }
+
+        this.placeFleet(this.computerPlayer.gameboard);
+        this.phase = "playing";
     }
 }
 
