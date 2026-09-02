@@ -213,4 +213,63 @@ describe("GameController", () => {
 
         expect(game.phase).toBe("playing");
     });
+
+    test("the first ship to place has length 5", () => {
+        const game = new GameController();
+
+        expect(
+            game.fleetToPlace[game.currentShipIndex]
+        ).toBe(5);
+    });
+
+    test("placeHumanShip() places the current ship on the human board", () => {
+        const game = new GameController();
+
+        game.placeHumanShip([0, 0], "horizontal");
+
+        expect(game.humanPlayer.gameboard.ships).toHaveLength(1);
+        expect(game.humanPlayer.gameboard.ships[0].ship.length).toBe(5);
+    });
+
+    test("placeHumanShip() advances to the next ship after successful placement", () => {
+        const game = new GameController();
+
+        game.placeHumanShip([0, 0], "horizontal");
+
+        expect(game.currentShipIndex).toBe(1);
+        expect(game.fleetToPlace[game.currentShipIndex]).toBe(4);
+    });
+
+    test("placeHumanShip() does not advance after an invalid placement", () => {
+        const game = new GameController();
+
+        expect(() => {
+            game.placeHumanShip([8, 0], "horizontal");
+        }).toThrow();
+
+        expect(game.currentShipIndex).toBe(0);
+        expect(game.humanPlayer.gameboard.ships).toHaveLength(0);
+    });
+
+    test("placeHumanShip() throws outside placement phase", () => {
+        const game = new GameController();
+        game.phase = "playing";
+
+        expect(() => {
+            game.placeHumanShip([0, 0], "horizontal");
+        }).toThrow("Game is not in placement phase");
+    });
+
+    test("placing the last human ship starts the game", () => {
+        const game = new GameController();
+
+        game.placeHumanShip([0, 0], "horizontal"); // 5
+        game.placeHumanShip([0, 1], "horizontal"); // 4
+        game.placeHumanShip([0, 2], "horizontal"); // 3
+        game.placeHumanShip([0, 3], "horizontal"); // 3
+        game.placeHumanShip([0, 4], "horizontal"); // 2
+
+        expect(game.phase).toBe("playing");
+        expect(game.computerPlayer.gameboard.ships).toHaveLength(5);
+    });
 });

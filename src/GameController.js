@@ -9,6 +9,8 @@ class GameController {
         this.gameOver = false;
         this.winner = null;
         this.phase = "placement";
+        this.fleetToPlace = [5, 4, 3, 3, 2];
+        this.currentShipIndex = 0;
     }
 
     switchTurn() {
@@ -99,6 +101,27 @@ class GameController {
                     // Invalid random position: try again.
                 }
             } while (!placed);
+        }
+    }
+
+    placeHumanShip(start, orientation) {
+        if (this.phase !== "placement") {
+            throw new Error("Game is not in placement phase");
+        }
+
+        const length = this.fleetToPlace[this.currentShipIndex];
+        const ship = new Ship(length);
+
+        this.humanPlayer.gameboard.placeShip(
+            ship,
+            start,
+            orientation
+        );
+
+        this.currentShipIndex++;
+
+        if (this.currentShipIndex === this.fleetToPlace.length) {
+            this.startGame();
         }
     }
 
