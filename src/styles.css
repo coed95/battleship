@@ -4,29 +4,101 @@
     padding: 0;
 }
 
+body {
+    min-height: 100vh;
+    background-color: #0b1730;
+    color: #f3f6ff;
+
+    font-family: Arial, sans-serif;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 32px;
+}
+
+#status {
+    margin-bottom: 16px;
+
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+#rotate-button {
+    margin-bottom: 24px;
+    padding: 12px 24px;
+
+    border: none;
+    border-radius: 999px;
+
+    background-color: #2e6fa3;
+    color: white;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        background-color 0.15s ease;
+}
+
+#rotate-button:hover {
+    background-color: #3b82b8;
+    transform: translateY(-1px);
+}
+
 #player-board,
 #computer-board {
     display: grid;
-    grid-template-columns: repeat(10, 32px);
-    grid-template-rows: repeat(10, 32px);
+
+    grid-template-columns: repeat(10, 34px);
+    grid-template-rows: repeat(10, 34px);
+
+    gap: 2px;
+
     margin: 20px;
+
+    padding: 6px;
+
+    background-color: #14254a;
+
+    border-radius: 8px;
 }
 
 .square {
-    width: 32px;
-    height: 32px;
-    border: 1px solid black;
-    box-sizing: border-box;
+    width: 34px;
+    height: 34px;
+
+    background-color: #213762;
+
+    border: 1px solid #35558a;
+    border-radius: 4px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.12s ease,
+        transform 0.12s ease;
+}
+
+.square:not(.ship):hover {
+    background-color: #2b477b;
 }
 
 .ship {
-    background-color: gray;
+    background-color: #667b97;
+    cursor: default;
 }
 
 .hit {
-    background-color: red;
+    background-color: #c94f5d;
 }
 
 .miss {
-    background-color: lightblue;
+    background-color: #6ca6d9;
 }
