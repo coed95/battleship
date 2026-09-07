@@ -11,6 +11,7 @@ class GameController {
         this.phase = "placement";
         this.fleetToPlace = [5, 4, 3, 3, 2];
         this.currentShipIndex = 0;
+        this.computerTargets = [];
     }
 
     switchTurn() {
@@ -36,16 +37,18 @@ class GameController {
             targetBoard = this.humanPlayer.gameboard;
         }
 
-        targetBoard.receiveAttack(coordinates);
+        const result = targetBoard.receiveAttack(coordinates);
 
         if (targetBoard.allShipsSunk()) {
             this.gameOver = true;
             this.winner = this.currentTurn;
 
-            return;
+            return result;
         }
 
         this.switchTurn();
+
+        return result;
     }
 
     computerTurn() {
@@ -56,20 +59,58 @@ class GameController {
         let coordinates;
         const targetBoard = this.humanPlayer.gameboard;
 
-        do {
-            coordinates = [
-                Math.floor(Math.random() * 10),
-                Math.floor(Math.random() * 10)
-            ];
-        } while (
-            targetBoard.attackedCoordinates.some(
-                ([attackedX, attackedY]) =>
-                    attackedX === coordinates[0] &&
-                    attackedY === coordinates[1]
-            )
-        );
+        if (this.computerTargets.length > 0) {
+            coordinates = this.computerTargets.shift();
+        }
+        else {
+            do {
+                coordinates = [
+                    Math.floor(Math.random() * 10),
+                    Math.floor(Math.random() * 10)
+                ];
+            } while (
+                targetBoard.attackedCoordinates.some(
+                    ([attackedX, attackedY]) =>
+                        attackedX === coordinates[0] &&
+                        attackedY === coordinates[1]
+                )
+            );
+        }
 
-        this.attack(coordinates);
+        const result = this.attack(coordinates);
+
+        if (result === "hit") {
+            const [x, y] = coordinates;
+
+            const adjacentCoordinates = [
+                [x + 1, y],
+                [x - 1, y],
+                [x, y + 1],
+                [x, y - 1]
+            ];
+
+            const validTargets = adjacentCoordinates.filter(([targetX, targetY]) => {
+                const isInsideBoard =
+                    targetX >= 0 &&
+                    targetX < 10 &&
+                    targetY >= 0 &&
+                    targetY < 10;
+
+                const wasAlreadyAttacked = targetBoard.attackedCoordinates.some(
+                    ([attackedX, attackedY]) =>
+                        attackedX === targetX &&
+                        attackedY === targetY
+                );
+
+                return isInsideBoard && !wasAlreadyAttacked;
+            });
+
+            this.computerTargets.push(...validTargets);
+        }
+
+        if (result === "sunk") {
+            this.computerTargets = [];
+        }
 
         return coordinates;
     }

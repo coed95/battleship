@@ -272,4 +272,76 @@ describe("GameController", () => {
         expect(game.phase).toBe("playing");
         expect(game.computerPlayer.gameboard.ships).toHaveLength(5);
     });
+
+    test("computerTurn() uses a queued target before choosing a random coordinate", () => {
+        const game = new GameController();
+        game.currentTurn = "computer";
+
+        game.computerTargets = [[3, 4]];
+
+        const coordinates = game.computerTurn();
+
+        expect(coordinates).toEqual([3, 4]);
+    });
+
+    test("computerTurn() adds adjacent targets after a hit", () => {
+        const game = new GameController();
+        game.currentTurn = "computer";
+
+        const ship = new Ship(2);
+        game.humanPlayer.gameboard.placeShip(ship, [4, 4], "horizontal");
+
+        game.computerTargets = [[4, 4]];
+
+        game.computerTurn();
+
+        expect(game.computerTargets).toContainEqual([5, 4]);
+        expect(game.computerTargets).toContainEqual([3, 4]);
+        expect(game.computerTargets).toContainEqual([4, 5]);
+        expect(game.computerTargets).toContainEqual([4, 3]);
+    });
+
+    test("computerTurn() does not add targets outside the board", () => {
+        const game = new GameController();
+        game.currentTurn = "computer";
+
+        const ship = new Ship(2);
+        game.humanPlayer.gameboard.placeShip(
+            ship,
+            [0, 0],
+            "horizontal"
+        );
+
+        game.computerTargets = [[0, 0]];
+
+        game.computerTurn();
+
+        expect(game.computerTargets).toContainEqual([1, 0]);
+        expect(game.computerTargets).toContainEqual([0, 1]);
+
+        expect(game.computerTargets).not.toContainEqual([-1, 0]);
+        expect(game.computerTargets).not.toContainEqual([0, -1]);
+    });
+
+    test("computerTurn() clears queued targets when a ship is sunk", () => {
+        const game = new GameController();
+        game.currentTurn = "computer";
+
+        const ship = new Ship(1);
+        game.humanPlayer.gameboard.placeShip(
+            ship,
+            [4, 4],
+            "horizontal"
+        );
+
+        game.computerTargets = [
+            [4, 4],
+            [5, 4],
+            [3, 4]
+        ];
+
+        game.computerTurn();
+
+        expect(game.computerTargets).toEqual([]);
+    });
 });
