@@ -86,7 +86,7 @@ body {
         transform 0.12s ease;
 }
 
-.square:not(.ship):hover {
+.square:not(.ship):not(.hit):not(.miss):not(.preview):hover {
     background-color: #2b477b;
 }
 
@@ -101,4 +101,8 @@ body {
 
 .miss {
     background-color: #6ca6d9;
+}
+
+.preview {
+    background-color: #4f6685;
 }

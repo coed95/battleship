@@ -10,6 +10,34 @@ const rotateButton = document.querySelector("#rotate-button");
 
 let placementOrientation = "horizontal";
 
+function showPlacementPreview(x, y) {
+    const length = game.fleetToPlace[game.currentShipIndex];
+
+    for (let i = 0; i < length; i++) {
+        const previewX =
+            placementOrientation === "horizontal" ?  x + i : x;
+
+        const previewY =
+            placementOrientation === "horizontal" ? y : y + i;
+
+        const square = playerBoardElement.querySelector(
+            `[data-x="${previewX}"][data-y="${previewY}"]`
+        );
+
+        if (square) {
+            square.classList.add("preview");
+        }
+    }
+}
+
+function clearPlacementPreview() {
+    playerBoardElement
+        .querySelectorAll(".preview")
+        .forEach((square) => {
+            square.classList.remove("preview");
+        });
+}
+
 function render() {
     rotateButton.hidden = game.phase !== "placement";
 
@@ -57,6 +85,25 @@ function render() {
             }
             : null
     );
+
+    if (game.phase === "placement") {
+        playerBoardElement
+            .querySelectorAll(".square")
+            .forEach((square) => {
+                square.addEventListener("mouseenter", () => {
+                    clearPlacementPreview();
+
+                    const x = Number(square.dataset.x);
+                    const y = Number(square.dataset.y);
+
+                    showPlacementPreview(x, y);
+                });
+
+                square.addEventListener("mouseleave", () => {
+                    clearPlacementPreview();
+                });
+            });
+    }
 
     renderBoard(
         game.computerPlayer.gameboard,
