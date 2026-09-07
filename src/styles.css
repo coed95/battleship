@@ -26,28 +26,23 @@ body {
     letter-spacing: 0.08em;
 }
 
-#rotate-button {
+#rotate-button,
+#new-game-button {
     margin-bottom: 24px;
     padding: 12px 24px;
-
     border: none;
     border-radius: 999px;
-
     background-color: #2e6fa3;
     color: white;
-
     font-size: 0.95rem;
     font-weight: 700;
     letter-spacing: 0.08em;
-
     cursor: pointer;
-
-    transition:
-        transform 0.15s ease,
-        background-color 0.15s ease;
+    transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
-#rotate-button:hover {
+#rotate-button:hover,
+#new-game-button:hover {
     background-color: #3b82b8;
     transform: translateY(-1px);
 }
