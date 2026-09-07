@@ -344,4 +344,27 @@ describe("GameController", () => {
 
         expect(game.computerTargets).toEqual([]);
     });
+
+    test("computerTurn() skips queued targets that were already attacked", () => {
+        const game = new GameController();
+        game.currentTurn = "computer";
+
+        const ship = new Ship(2);
+        game.humanPlayer.gameboard.placeShip(
+            ship,
+            [5, 5],
+            "horizontal"
+        );
+
+        game.humanPlayer.gameboard.receiveAttack([2, 2]);
+
+        game.computerTargets = [
+            [2, 2],
+            [5, 5]
+        ];
+
+        const coordinates = game.computerTurn();
+
+        expect(coordinates).toEqual([5, 5]);
+    });
 });

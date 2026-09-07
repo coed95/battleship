@@ -59,6 +59,17 @@ class GameController {
         let coordinates;
         const targetBoard = this.humanPlayer.gameboard;
 
+        while (
+            this.computerTargets.length > 0 &&
+            targetBoard.attackedCoordinates.some(
+                ([attackedX, attackedY]) =>
+                    attackedX === this.computerTargets[0][0] &&
+                    attackedY === this.computerTargets[0][1]
+            )
+        ) {
+            this.computerTargets.shift();
+        }
+
         if (this.computerTargets.length > 0) {
             coordinates = this.computerTargets.shift();
         }
@@ -102,7 +113,17 @@ class GameController {
                         attackedY === targetY
                 );
 
-                return isInsideBoard && !wasAlreadyAttacked;
+                const isAlreadyQueued = this.computerTargets.some(
+                    ([queuedX, queuedY]) =>
+                        queuedX === targetX &&
+                        queuedY === targetY
+                );    
+
+                return (
+                    isInsideBoard &&
+                    !wasAlreadyAttacked &&
+                    !isAlreadyQueued
+                );
             });
 
             this.computerTargets.push(...validTargets);
