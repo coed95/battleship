@@ -148,4 +148,34 @@ describe("Gameboard", () => {
 
         expect(gameboard.allShipsSunk()).toBe(true);
     });
+
+    test("receiveAttack() returns hit when a ship is hit", () => {
+        const gameboard = new Gameboard();
+        const ship = new Ship(2);
+
+        gameboard.placeShip(ship, [1, 1], "horizontal");
+
+        const result = gameboard.receiveAttack([1, 1]);
+
+        expect(result).toBe("hit");
+    });
+
+    test("receiveAttack() returns miss when no ship is hit", () => {
+        const gameboard = new Gameboard();
+
+        const result = gameboard.receiveAttack([4, 4]);
+
+        expect(result).toBe("miss");
+    });
+
+    test("receiveAttack() returns sunk when the hit sinks the ship", () => {
+        const gameboard = new Gameboard();
+        const ship = new Ship(1);
+
+        gameboard.placeShip(ship, [2, 2], "horizontal");
+
+        const result = gameboard.receiveAttack([2, 2]);
+
+        expect(result).toBe("sunk");
+    });
 });

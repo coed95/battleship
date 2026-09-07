@@ -78,9 +78,16 @@ class Gameboard {
 
         if (shipHit) {
             shipHit.ship.hit();
+
+            if (shipHit.ship.isSunk()) {
+                return "sunk";
+            }
+            
+            return "hit";
         }
         else {
             this.missedAttacks.push(coordinates);
+            return "miss";
         }
     }
 
