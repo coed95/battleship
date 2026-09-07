@@ -1,14 +1,15 @@
 import GameController from "./GameController.js";
 import { renderBoard } from "./domController.js";
 
-const game = new GameController();
+let game = new GameController();
+let placementOrientation = "horizontal";
+let errorMessage = null;
 
 const playerBoardElement = document.querySelector("#player-board");
 const computerBoardElement = document.querySelector("#computer-board");
 const statusElement = document.querySelector("#status");
 const rotateButton = document.querySelector("#rotate-button");
-
-let placementOrientation = "horizontal";
+const newGameButton = document.querySelector("#new-game-button");
 
 function showPlacementPreview(x, y) {
     const length = game.fleetToPlace[game.currentShipIndex];
@@ -40,8 +41,12 @@ function clearPlacementPreview() {
 
 function render() {
     rotateButton.hidden = game.phase !== "placement";
+    newGameButton.hidden = !game.gameOver;
 
-    if (game.phase === "placement") {
+    if (errorMessage) {
+        statusElement.textContent = errorMessage;
+    }
+    else if (game.phase === "placement") {
         const currentLength =
             game.fleetToPlace[game.currentShipIndex];
 
@@ -76,9 +81,11 @@ function render() {
                         [x, y],
                         placementOrientation
                     );
+
+                    errorMessage = null;
                 }
                 catch (error) {
-                    statusElement.textContent = error.message;
+                    errorMessage = error.message;
                 }
 
                 render();
@@ -137,6 +144,18 @@ rotateButton.addEventListener("click", () => {
             : "horizontal";
 
     rotateButton.textContent = `Rotate (${placementOrientation})`;
+
+    errorMessage = null;
+    render();
+});
+
+newGameButton.addEventListener("click", () => {
+    game = new GameController();
+
+    placementOrientation = "horizontal";
+    errorMessage = null;
+
+    rotateButton.textContent = "Rotate (horizontal)";
 
     render();
 });
